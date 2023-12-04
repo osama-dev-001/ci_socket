@@ -76,7 +76,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 var dataString = {
                     message: $("#message").val()
                 };
-                console.log(dataString);
                 $.ajax({
                     type: "POST",
                     url: "message/send",
@@ -97,15 +96,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
         });
         
         var socket = io.connect('http://localhost:8080',  { transports : ['websocket'] });
-        socket.on('message', function(data) {
+        socket.on('newmessage', function(data) {
             $("#message-tbody").prepend('<tr><td>' + data + '</td><td>' + data + '</td></tr>');
             $("#msgcount").text(data.msgcount);
         });
-
-        
-
-       
     </script>
 </body>
-
 </html>
