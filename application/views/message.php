@@ -76,27 +76,18 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 var dataString = {
                     message: $("#message").val()
                 };
-
+                console.log(dataString);
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo base_url('message/send'); ?>",
+                    url: "message/send",
                     data: dataString,
-                    dataType: "json",
                     headers: {
                         'Access-Control-Allow-Origin': '*'
                     },
                     cache: false,
                     success: function(data) {
-
-                        if (data.success == true) {
-                            var socket = io.connect('http://' + window.location.hostname + ':8080');
-                            var socket = io.connect('http://192.168.1.4:8080');
-                            socket.emit('new_message', {
-                                message: data.message,
-                                date: data.date,
-                                msgcount: data.msgcount
-                            });
-                        }
+                        socket.emit('message', $("#message").val());
+                       
                     },
                     error: function(xhr, status, error) {
                         alert(error);
@@ -104,12 +95,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 });
             });
         });
-        var socket = io.connect('http://' + window.location.hostname + ':3000');
-        var socket = io.connect('http://192.168.1.4:8080');
-        socket.on('new_message', function(data) {
-            $("#message-tbody").prepend('<tr><td>' + data.date + '</td><td>' + data.message + '</td></tr>');
+        
+        var socket = io.connect('http://localhost:8080',  { transports : ['websocket'] });
+        socket.on('message', function(data) {
+            $("#message-tbody").prepend('<tr><td>' + data + '</td><td>' + data + '</td></tr>');
             $("#msgcount").text(data.msgcount);
         });
+
+        
+
+       
     </script>
 </body>
 

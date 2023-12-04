@@ -21,7 +21,7 @@ class SendController extends CI_Controller
     public function index()
     {
         $data = array();
-        $allmsgs = $this->db->select('*')->from('tbl_msg')->get()->result_array();
+        $allmsgs = $this->db->select('*')->from('tbl_msg')->order_by('id', 'desc')->get()->result_array();
         $data['allMsgs'] = $allmsgs;
         $this->load->view('message', $data);
     }
@@ -30,6 +30,7 @@ class SendController extends CI_Controller
         $arr['msg'] = $this->input->post('message');
         $arr['date'] = date('Y-m-d');
         $arr['status'] = 1;
+        print_r($arr);
         $this->db->insert('tbl_msg', $arr);
         $detail = $this->db->select('*')->from('tbl_msg')->where('id', $this->db->insert_id())->get()->row();
         $msgCount = $this->db->select('*')->from('tbl_msg')->get()->num_rows();
